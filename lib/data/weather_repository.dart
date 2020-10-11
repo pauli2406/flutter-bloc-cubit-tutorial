@@ -23,7 +23,7 @@ class FakeWeatherRepository implements WeatherRepository {
 
         // Return "fetched" weather
         return Weather(
-          cityName: cityName,
+          cityName,
           // Temperature between 20 and 35.99
           temperatureCelsius: 20 + random.nextInt(15) + random.nextDouble(),
         );
