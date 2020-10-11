@@ -8,6 +8,9 @@ part of 'weather.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+Weather _$WeatherFromJson(Map<String, dynamic> json) {
+  return _Weather.fromJson(json);
+}
 
 /// @nodoc
 class _$WeatherTearOff {
@@ -20,6 +23,11 @@ class _$WeatherTearOff {
       temperatureCelsius: temperatureCelsius,
     );
   }
+
+// ignore: unused_element
+  Weather fromJson(Map<String, Object> json) {
+    return Weather.fromJson(json);
+  }
 }
 
 /// @nodoc
@@ -31,6 +39,7 @@ mixin _$Weather {
   String get cityName;
   double get temperatureCelsius;
 
+  Map<String, dynamic> toJson();
   $WeatherCopyWith<Weather> get copyWith;
 }
 
@@ -94,10 +103,15 @@ class __$WeatherCopyWithImpl<$Res> extends _$WeatherCopyWithImpl<$Res>
   }
 }
 
+@JsonSerializable()
+
 /// @nodoc
 class _$_Weather with DiagnosticableTreeMixin implements _Weather {
   const _$_Weather(this.cityName, {this.temperatureCelsius})
       : assert(cityName != null);
+
+  factory _$_Weather.fromJson(Map<String, dynamic> json) =>
+      _$_$_WeatherFromJson(json);
 
   @override
   final String cityName;
@@ -139,11 +153,18 @@ class _$_Weather with DiagnosticableTreeMixin implements _Weather {
   @override
   _$WeatherCopyWith<_Weather> get copyWith =>
       __$WeatherCopyWithImpl<_Weather>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_WeatherToJson(this);
+  }
 }
 
 abstract class _Weather implements Weather {
   const factory _Weather(String cityName, {double temperatureCelsius}) =
       _$_Weather;
+
+  factory _Weather.fromJson(Map<String, dynamic> json) = _$_Weather.fromJson;
 
   @override
   String get cityName;
