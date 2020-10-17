@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cubit_bloc_tutorial/cubit/weather_cubit.dart';
-import 'package:flutter_cubit_bloc_tutorial/cubit/weather_state.dart';
 import 'package:flutter_cubit_bloc_tutorial/data/model/weather.dart';
 
 import '../cubit/weather_cubit.dart';
@@ -23,25 +22,24 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
         alignment: Alignment.center,
         child: BlocConsumer<WeatherCubit, WeatherState>(
           listener: (context, state) {
-            if (state is WeatherError) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
+            state.maybeMap(
+              error: (e) => {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(e.message),
+                  ),
                 ),
-              );
-            }
+              },
+              orElse: null,
+            );
           },
           builder: (context, state) {
-            if (state is WeatherInitial) {
-              return buildInitialInput();
-            } else if (state is WeatherLoading) {
-              return buildLoading();
-            } else if (state is WeatherLoaded) {
-              return buildColumnWithData(state.weather);
-            } else {
-              // (state is WeatherError)
-              return buildInitialInput();
-            }
+            return state.map(
+              initial: (_) => buildInitialInput(),
+              loading: (_) => buildLoading(),
+              error: (_) => buildInitialInput(),
+              loaded: (data) => buildColumnWithData(data.weather),
+            );
           },
         ),
       ),

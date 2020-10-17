@@ -1,19 +1,23 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_cubit_bloc_tutorial/data/model/weather.dart';
 import 'package:flutter_cubit_bloc_tutorial/data/weather_repository.dart';
-import 'package:flutter_cubit_bloc_tutorial/cubit/weather_state.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'weather_state.dart';
+part 'weather_cubit.freezed.dart';
 
 class WeatherCubit extends Cubit<WeatherState> {
   final WeatherRepository _weatherRepository;
 
-  WeatherCubit(this._weatherRepository) : super(WeatherInitial());
+  WeatherCubit(this._weatherRepository) : super(WeatherState.initial());
 
   Future<void> getWeather(String cityName) async {
     try {
-      emit(WeatherLoading());
+      emit(WeatherState.loading());
       final weather = await _weatherRepository.fetchWeather(cityName);
-      emit(WeatherLoaded(weather));
+      emit(WeatherState.loaded(weather));
     } on NetworkException {
-      emit(WeatherError("Couldn't fetch weather. Is the device online?"));
+      emit(WeatherState.error("Couldn't fetch weather. Is the device online?"));
     }
   }
 }
